@@ -1,0 +1,15 @@
+model.safetensors
+
+/img
+/reference
+/venv
+/trained_model
+/googleShopUI
+/home/__pycache__
+/home/migrations/__pychach__
+/home/migrations/0001_initial.py
+db.sqlite3
+.pakage-lock
+*/__pycache__
+*/*/__pycache__
+
