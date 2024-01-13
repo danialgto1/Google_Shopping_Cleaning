@@ -3,7 +3,7 @@ model.safetensors
 /img
 /reference
 /venv
-/trained_model
+/trained_model/simModel.pth
 /googleShopUI
 /home/__pycache__
 /home/migrations/__pychach__
