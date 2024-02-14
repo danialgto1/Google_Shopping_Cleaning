@@ -46,13 +46,7 @@ INSTALLED_APPS = [
 
 
 CORS_ALLOWED_ORIGINS = [
-"https://domain.com",
-"https://api.domain.com",
-"http://localhost:5173",
-"http://localhost:3000",
-"http://127.0.0.1:3000",
-"http://127.0.0.1:5173",
-"http://3.128.254.241"
+'*',
 ]
 
 SWAGGER_SETTINGS = {
