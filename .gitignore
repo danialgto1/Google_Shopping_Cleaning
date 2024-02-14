@@ -8,6 +8,8 @@ model.safetensors
 /home/__pycache__
 /home/migrations/__pychach__
 /home/migrations/0001_initial.py
+/home/migrations/0004_rename_cleaning_price_estimatecleaningprice_cleaning_price.py
+/home/migrations/0005_auto_20240214_1238.py
 db.sqlite3
 .pakage-lock
 */__pycache__
