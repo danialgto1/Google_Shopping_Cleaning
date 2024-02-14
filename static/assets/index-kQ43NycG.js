@@ -11214,7 +11214,7 @@ const Cc = {
     cleaningFrequency: ["one_time", "monthly", "bi_weekly"],
     productCondition: ["Good", "Dirty", "VeryDirty"],
   },
-  Yu = "https://3.128.254.241/";
+  Yu = "http://3.128.254.241/";
 function Hg({
   setMessage: e,
   formResponse: t,
