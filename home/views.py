@@ -1,8 +1,8 @@
 from sys import exception
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import ResponseDataModel
-from .serializers import InputQuerySerializer , ResponseDataSerializer
+from .models import ResponseDataModel , EstimateCleaningPrice
+from .serializers import InputQuerySerializer , ResponseDataSerializer, EstimateCleaningPriceSerializer
 from .data_extract import google_shop
 from .initial import initial
 from .filters import query_filter_client
@@ -12,7 +12,10 @@ from .speech_to_text import speech_to_text
 from rest_framework import status 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .cleaning_price_calculator import grab_specs
+from .cleaning_price_calculator import  categorize_base_on_json
+from .ML_cleaning_price import cleaning_price_calculator
+from .categorize import categorize
+from .user_feedback import user_price_feedback
 
 class HomeView(APIView):
     # swagger manual schemas
@@ -81,6 +84,7 @@ class HomeView(APIView):
                 if exc is not None:
                     return Response({'message':exc} , status.HTTP_400_BAD_REQUEST )
             products_list=google_shop(input_query_model)
+            print()
             if not isinstance(products_list , list):
                 return Response ({"message":products_list} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             products_list = query_filter_client(products_list , query_params)
@@ -95,6 +99,7 @@ class HomeView(APIView):
 
             response = ResponseDataModel.objects.filter(input_query_model = input_query_model)
             srz_data = ResponseDataSerializer(response , many= True).data
+            categorize_base_on_json(input_query_model)
             return Response(srz_data)
         print(srz_data)
         return Response(srz_data.error_messages)
@@ -104,15 +109,27 @@ class CleaningPriceView(APIView):
     def post(self , request):
         try:
             data = request.data
-            instance = ResponseDataModel.objects.last()
-            description = instance.description
-            price = instance.estimated_price
-            
-            result = grab_specs(description=description  , price=price , product_condition=data["product_condition"] ,cleaning_frequency=data["cleaning_frequency"] )
-            return Response(result , status.HTTP_200_OK)
+            response_model = ResponseDataModel.objects.get(id = data["id"])
+            price ,currency_sign= cleaning_price_calculator(response_model)
+            cleaning_frequency = categorize("frequency_factors" , data["cleaning_frequency"])
+            product_condition = categorize("condition_factor" , data["product_condition"])
+            cleaning_price = price * product_condition * cleaning_frequency
+            model = EstimateCleaningPrice.objects.create(response_model=response_model,cleaning_price=cleaning_price,currency_sign=currency_sign,cleaning_frequency=data.get("cleaning_frequency" , "one_time"),product_condition=data.get("product_condition" , "Good"))
+            data = EstimateCleaningPriceSerializer(instance=model).data
+
+            return Response(data , status.HTTP_200_OK)
         except Exception as e:
             return Response({'message' : str(e) } , status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
+
+class UserPriceFeedbackView(APIView):
+    def post(self , request):
+        data = request.data
+        model = EstimateCleaningPrice.objects.get(id=data["id"])
+        user_price_feedback(model , data["user_price"])
+        data = EstimateCleaningPriceSerializer(instance=model).data
+        return Response(data , status.HTTP_200_OK)
+ 
 from django.shortcuts import render
 
 def index(request):

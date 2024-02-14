@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ResponseDataModel , InputQueryModel
+from .models import ResponseDataModel , InputQueryModel , EstimateCleaningPrice
 
 class ResponseInline(admin.TabularInline):
     model = ResponseDataModel
@@ -11,4 +11,5 @@ class InputQueryAdmin(admin.ModelAdmin):
 
 admin.site.register(InputQueryModel , InputQueryAdmin)
 admin.site.register(ResponseDataModel)
+admin.site.register(EstimateCleaningPrice)
 # Register your models here.

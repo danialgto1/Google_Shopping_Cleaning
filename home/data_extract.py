@@ -43,12 +43,10 @@ def google_shop(input_query_model):
                                 params=params,
                                 headers=headers,
                                 cookies=cookies)
-            page.status_code ==200
+            assert page.status_code ==200
         except Exception as e:
             return(e)
-        # with open('./t.html' , 'r') as file:
-        #     page = file.read()
-        # soup = BeautifulSoup(page , 'html.parser')
+
         soup = BeautifulSoup(page.text , 'html.parser')
 
         try:

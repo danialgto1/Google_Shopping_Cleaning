@@ -1,6 +1,6 @@
 from .models import InputQueryModel
 from rest_framework import serializers
-from .models import ResponseDataModel
+from .models import ResponseDataModel , EstimateCleaningPrice
 
 class ResponseDataSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,6 +8,8 @@ class ResponseDataSerializer(serializers.ModelSerializer):
         exclude = ['input_query_model']
 
 class InputQuerySerializer(serializers.ModelSerializer):
+    
+
     class Meta:
         model = InputQueryModel
         fields = '__all__'
@@ -18,3 +20,10 @@ class InputQuerySerializer(serializers.ModelSerializer):
         if not search_query and not user_voice:
             raise serializers.ValidationError('You must provide at least one of search query or voice')
         return super().validate(attrs)
+    
+
+class EstimateCleaningPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EstimateCleaningPrice
+        fields = "__all__"
+        
