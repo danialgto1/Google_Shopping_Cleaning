@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
+from .utils import get_price_value , get_currency_sign
 
 def cleaning_price_calculator(response_model):
     with open("sample_data.json" , "r") as file:
@@ -27,8 +28,8 @@ def cleaning_price_calculator(response_model):
     mse_ridge = mean_squared_error(y_test, y_pred_ridge)
     model = response_model
     price = model.estimated_price
-    currency_sign = price[0] if isinstance(price[0] , str) else None
-    price = float(re.findall(r"[\d,\.]+",price)[0])
+    currency_sign = get_currency_sign(price)
+    price = get_price_value(price)
     new_object = {
     "price_factor": model.input_query_model.price_factor,
     "surface_factor": model.input_query_model.surface_factor,

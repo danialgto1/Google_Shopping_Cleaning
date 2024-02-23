@@ -34,4 +34,5 @@ class EstimateCleaningPrice(models.Model):
     cleaning_frequency = models.CharField(default = "one_time", max_length=20)
     product_condition = models.CharField(default ="Good", max_length=20 )
     user_cleaning_price = models.FloatField(blank = True , null= True)
+    confidence = models.FloatField(blank=True , null=True)
     

@@ -15,6 +15,7 @@ from .cleaning_price_calculator import  categorize_base_on_json
 from .ML_cleaning_price import cleaning_price_calculator
 from .categorize import categorize
 from .user_feedback import user_price_feedback
+from home.calculate_confidence import calculate_closeness
 
 class HomeView(APIView):
     # swagger manual schemas
@@ -106,19 +107,20 @@ class HomeView(APIView):
 
 class CleaningPriceView(APIView):
     def post(self , request):
-        try:
+        # try:
             data = request.data
             response_model = ResponseDataModel.objects.get(id = data["id"])
             price ,currency_sign= cleaning_price_calculator(response_model)
             cleaning_frequency = categorize("frequency_factors" , data["cleaning_frequency"])
             product_condition = categorize("condition_factor" , data["product_condition"])
             cleaning_price = price * product_condition * cleaning_frequency
-            model = EstimateCleaningPrice.objects.create(response_model=response_model,cleaning_price=cleaning_price,currency_sign=currency_sign,cleaning_frequency=data.get("cleaning_frequency" , "one_time"),product_condition=data.get("product_condition" , "Good"))
+            confidence = calculate_closeness(response_model)
+            model = EstimateCleaningPrice.objects.create(response_model=response_model,cleaning_price=cleaning_price,currency_sign=currency_sign,cleaning_frequency=data.get("cleaning_frequency" , "one_time"),product_condition=data.get("product_condition" , "Good") , confidence=confidence)
             data = EstimateCleaningPriceSerializer(instance=model).data
 
             return Response(data , status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'message' : str(e) } , status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # except Exception as e:
+        #     return Response({'message' : str(e) } , status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UserPriceFeedbackView(APIView):

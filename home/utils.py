@@ -1,6 +1,7 @@
 from PIL import Image
 import base64
 import os
+import re
 from user_agent import generate_user_agent
 from io import BytesIO
 import threading
@@ -54,3 +55,11 @@ def image_save(directory , file_name , image_data):
 
     except Exception as error:
         return (error)
+
+def get_price_value(price):
+    price = float(re.findall(r"[\d,\.]+",price)[0])
+    return price
+
+def get_currency_sign(price):
+    currency_sign = price[0] if isinstance(price[0] , str) else None
+    return currency_sign
