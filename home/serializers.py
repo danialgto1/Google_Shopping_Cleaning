@@ -1,11 +1,21 @@
 from .models import InputQueryModel
 from rest_framework import serializers
 from .models import ResponseDataModel , EstimateCleaningPrice
+from django.http import HttpRequest
 
 class ResponseDataSerializer(serializers.ModelSerializer):
+    website = serializers.SerializerMethodField()
     class Meta:
         model = ResponseDataModel
         exclude = ['input_query_model']
+    
+    def get_website(self , obj):
+        request = self.context.get('request')
+        print(self.context)
+        if request is not None:
+            current_host = request.get_host()
+            return f"{current_host}/website_replace/{obj.id}"
+        return None 
 
 class InputQuerySerializer(serializers.ModelSerializer):
     

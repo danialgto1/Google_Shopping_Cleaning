@@ -130,7 +130,13 @@ class UserPriceFeedbackView(APIView):
         user_price_feedback(model , data["user_price"])
         data = EstimateCleaningPriceSerializer(instance=model).data
         return Response(data , status.HTTP_200_OK)
- 
+
+class WebsiteReplaceView(APIView):
+    def get(self , request , id):
+        instance_model = ResponseDataModel.objects.get(id = id)
+        similar_model = ResponseDataModel.objects.filter(input_query_model=instance_model.input_query_model)
+        srz_data = ResponseDataSerializer(instance=similar_model , many=True , context={'request': request}).data
+        return Response(srz_data)
 from django.shortcuts import render
 
 def index(request):
