@@ -98,7 +98,7 @@ class HomeView(APIView):
                 return Response ({'message' : str(e)} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             response = ResponseDataModel.objects.filter(input_query_model = input_query_model)
-            srz_data = ResponseDataSerializer(response , many= True).data
+            srz_data = ResponseDataSerializer(response , many= True, context={'request': request}).data
             categorize_base_on_json(input_query_model)
             return Response(srz_data)
         print(srz_data)
