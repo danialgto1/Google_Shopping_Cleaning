@@ -6,6 +6,7 @@ from drf_yasg import openapi
 from home.views import index
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 
 schema_view = get_schema_view(
@@ -22,9 +23,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('' , index ),
     path('admin/', admin.site.urls),
     path('api/', include('home.urls')),  # Include your app's URL patterns
     re_path(r'^swagger(?P<format>.json|.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^(?!api|admin).*$', TemplateView.as_view(template_name='index.html')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
