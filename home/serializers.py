@@ -11,7 +11,6 @@ class ResponseDataSerializer(serializers.ModelSerializer):
     
     def get_integrated_website(self , obj):
         request = self.context.get('request')
-        print ("======",request.is_secure())
         if request is not None:
             if 'HTTP_X_FORWARDED_PROTO' in request.META:
                 protocol = request.META['HTTP_X_FORWARDED_PROTO']
