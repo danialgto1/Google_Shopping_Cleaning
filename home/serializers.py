@@ -12,8 +12,10 @@ class ResponseDataSerializer(serializers.ModelSerializer):
     def get_integrated_website(self , obj):
         request = self.context.get('request')
         if request is not None:
-            protocol = 'https' if request.is_secure() else 'http'
-            current_host = request.build_absolute_uri('/')
+            if 'HTTP_X_FORWARDED_PROTO' in request.META:
+                protocol = request.META['HTTP_X_FORWARDED_PROTO']
+            else:
+                protocol = 'http'  # Default to http if header not present
             return f"{protocol}://{request.get_host()}/website_replace/{obj.id}"
         return None 
 
