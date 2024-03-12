@@ -12,8 +12,9 @@ class ResponseDataSerializer(serializers.ModelSerializer):
     def get_integrated_website(self , obj):
         request = self.context.get('request')
         if request is not None:
+            protocol = 'https' if request.is_secure() else 'http'
             current_host = request.build_absolute_uri('/')
-            return f"{current_host}website_replace/{obj.id}"
+            return f"{protocol}://{request.get_host()}/website_replace/{obj.id}"
         return None 
 
 class InputQuerySerializer(serializers.ModelSerializer):
