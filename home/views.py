@@ -83,9 +83,11 @@ class WebsiteReplaceView(APIView):
 
 class WebsiteReplaceViewSingle(APIView):
     def get(self , request , id):
+        l = []
         instance_model = ResponseDataModel.objects.get(id = id)
         srz_data = ResponseDataSerializer(instance=instance_model  , context={'request': request}).data
-        return Response(list(srz_data))
+        l.append(srz_data)
+        return Response((l))
 
 
 
