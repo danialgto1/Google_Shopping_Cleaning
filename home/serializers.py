@@ -6,13 +6,13 @@ from urllib.parse import quote
 
 class ResponseDataSerializer(serializers.ModelSerializer):
     integrated_website = serializers.SerializerMethodField()
-    website= serializers.SerializerMethodField()
+    # website= serializers.SerializerMethodField()
     class Meta:
         model = ResponseDataModel
         exclude = ['input_query_model']
     
-    def get_website(self,obj):
-        return quote(obj.website)
+    # def get_website(self,obj):
+    #     return quote(obj.website)
     
     def get_integrated_website(self , obj):
         request = self.context.get('request')
