@@ -9,8 +9,6 @@ from .ai_image_similarity import ai_similarity
 from .utils import json_to_image
 from .speech_to_text import speech_to_text
 from rest_framework import status 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 from .cleaning_price_calculator import  categorize_base_on_json
 from .ML_cleaning_price import cleaning_price_calculator
 from .categorize import categorize
@@ -18,61 +16,6 @@ from .user_feedback import user_price_feedback
 from home.calculate_confidence import calculate_closeness
 
 class HomeView(APIView):
-    # swagger manual schemas
-    @swagger_auto_schema(
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        required=["image_url",],  # Add other required fields if any
-        properties={
-            'image_url': openapi.Schema(
-                type=openapi.TYPE_STRING,
-                description='The URL of the image',
-            ),
-            'user_voice': openapi.Schema(
-                type=openapi.TYPE_FILE,
-                description='The user voice file',
-            ),
-            'search_query': openapi.Schema(
-                type=openapi.TYPE_STRING,
-                description='The search query',
-            ),
-            'product_qty': openapi.Schema(
-                type=openapi.TYPE_INTEGER,
-                description='The product quantity',
-            ),
-        },
-    ),
-            manual_parameters=[
-            openapi.Parameter(
-                name="price_max",
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_INTEGER,
-                description="The maximum price for filtering products",
-            ),
-            openapi.Parameter(
-                name="price_min",
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_INTEGER,
-                description="The minimum price for filtering products",
-            ),            openapi.Parameter(
-                name="brand",
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_STRING,
-                description="The brand for filtering products",
-            ),            openapi.Parameter(
-                name="source",
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_STRING,
-                description="The source of products for filtering products",
-            ),
-        ],
-    responses={
-        status.HTTP_201_CREATED: ResponseDataSerializer(many=True),
-        status.HTTP_400_BAD_REQUEST: "Bad Request",
-    },
-    operation_summary="Summary of your API",
-    operation_description="Description of your API",
-    )
     def post(self , request):
         query_params = request.query_params
         srz_data = InputQuerySerializer(data=request.data)
@@ -137,6 +80,15 @@ class WebsiteReplaceView(APIView):
         similar_model = ResponseDataModel.objects.filter(input_query_model=instance_model.input_query_model)
         srz_data = ResponseDataSerializer(instance=similar_model , many=True , context={'request': request}).data
         return Response(srz_data)
+
+class WebsiteReplaceViewSingle(APIView):
+    def get(self , request , id):
+        instance_model = ResponseDataModel.objects.get(id = id)
+        srz_data = ResponseDataSerializer(instance=instance_model  , context={'request': request}).data
+        return Response(srz_data)
+
+
+
 from django.shortcuts import render
 
 def index(request):

@@ -6,5 +6,6 @@ urlpatterns = [
     path('' , views.HomeView.as_view() ),
     path('calculate/', views.CleaningPriceView.as_view()),
     path('feedback/' , views.UserPriceFeedbackView.as_view()),
-    path('website_replace/<int:id>' , views.WebsiteReplaceView.as_view())
+    path('website_replace/<int:id>' , views.WebsiteReplaceViewSingle.as_view()),
+    path('website_replace_family/<int:id>' , views.WebsiteReplaceView.as_view())
 ]
