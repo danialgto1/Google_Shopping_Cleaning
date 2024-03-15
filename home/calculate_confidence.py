@@ -1,6 +1,6 @@
 import numpy as np
 from home.models import  ResponseDataModel
-from home.serializers import ResponseDataSerializer
+from home.serializerss import ResponseDataSerializer
 from home.utils import get_price_value
 
 def calculate_closeness(response_model):

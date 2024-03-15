@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import ResponseDataModel , EstimateCleaningPrice
-from .serializers import InputQuerySerializer , ResponseDataSerializer, EstimateCleaningPriceSerializer
+from .serializerss import InputQuerySerializer , ResponseDataSerializerWithConfidence, EstimateCleaningPriceSerializer
 from .data_extract import google_shop
 from .initial import initial
 from .filters import query_filter_client
@@ -41,7 +41,7 @@ class HomeView(APIView):
                 return Response ({'message' : str(e)} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             response = ResponseDataModel.objects.filter(input_query_model = input_query_model)
-            srz_data = ResponseDataSerializer(response , many= True, context={'request': request}).data
+            srz_data = ResponseDataSerializerWithConfidence(response , many= True, context={'request': request}).data
             categorize_base_on_json(input_query_model)
             return Response(srz_data)
         print(srz_data)
@@ -78,14 +78,14 @@ class WebsiteReplaceView(APIView):
     def get(self , request , id):
         instance_model = ResponseDataModel.objects.get(id = id)
         similar_model = ResponseDataModel.objects.filter(input_query_model=instance_model.input_query_model)
-        srz_data = ResponseDataSerializer(instance=similar_model , many=True , context={'request': request}).data
+        srz_data = ResponseDataSerializerWithConfidence(instance=similar_model , many=True , context={'request': request}).data
         return Response(srz_data)
 
 class WebsiteReplaceViewSingle(APIView):
     def get(self , request , id):
         l = []
         instance_model = ResponseDataModel.objects.get(id = id)
-        srz_data = ResponseDataSerializer(instance=instance_model  , context={'request': request}).data
+        srz_data = ResponseDataSerializerWithConfidence(instance=instance_model  , context={'request': request}).data
         l.append(srz_data)
         return Response((l))
 
