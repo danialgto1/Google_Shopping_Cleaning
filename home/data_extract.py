@@ -71,7 +71,6 @@ def google_shop(input_query_model):
         elements = soup.find_all('div' , class_='u30d4')
         if not len(elements):
             return ('Not Found')
-            break
         for element in elements:
             # seller_link
             try:

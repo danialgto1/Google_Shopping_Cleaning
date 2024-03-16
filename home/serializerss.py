@@ -16,9 +16,17 @@ class ResponseDataSerializer(serializers.ModelSerializer):
 class ResponseDataSerializerWithConfidence(serializers.ModelSerializer):
     integrated_website = serializers.SerializerMethodField()
     confidence_percentage= serializers.SerializerMethodField()
+    filter_by_purchase_link=serializers.SerializerMethodField()
+    purchase_link = serializers.SerializerMethodField()
     class Meta:
         model = ResponseDataModel
         exclude = ['input_query_model']
+    
+    def get_purchase_link(self,obj):
+        return obj.input_query_model.purchase_link
+    
+    def get_filter_by_purchase_link(self,obj):
+        return obj.input_query_model.filter_by_purchase_link
     
     def get_confidence_percentage(self,obj):
         instances = ResponseDataModel.objects.filter(input_query_model = obj.input_query_model)

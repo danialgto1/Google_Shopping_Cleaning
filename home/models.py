@@ -7,6 +7,8 @@ def voice_upload_path(instance , filename):
 
 class InputQueryModel(models.Model):
     image_url = models.CharField(max_length=300)
+    purchase_link=models.CharField(max_length=300 , blank=True , null=True)
+    filter_by_purchase_link=models.BooleanField(default=False)
     user_voice = models.FileField(upload_to=voice_upload_path, blank=True , null=True)
     search_query = models.CharField( max_length=200 , blank=True , null=True)
     product_qty = models.IntegerField(default=60)

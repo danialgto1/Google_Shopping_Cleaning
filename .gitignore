@@ -10,7 +10,10 @@ model.safetensors
 /home/migrations/0001_initial.py
 /home/migrations/0004_rename_cleaning_price_estimatecleaningprice_cleaning_price.py
 /home/migrations/0005_auto_20240214_1238.py
+/home/migrations/*.*
 db.sqlite3
 .pakage-lock
 */__pycache__
 */*/__pycache__
+/home/serializers.py
+

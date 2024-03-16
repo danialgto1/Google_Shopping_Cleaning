@@ -14,6 +14,7 @@ from .ML_cleaning_price import cleaning_price_calculator
 from .categorize import categorize
 from .user_feedback import user_price_feedback
 from home.calculate_confidence import calculate_closeness
+from home.utils import filter_by_purchase_link
 
 class HomeView(APIView):
     def post(self , request):
@@ -27,10 +28,10 @@ class HomeView(APIView):
                 if exc is not None:
                     return Response({'message':exc} , status.HTTP_400_BAD_REQUEST )
             products_list=google_shop(input_query_model)
-            print()
             if not isinstance(products_list , list):
                 return Response ({"message":products_list} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             products_list = query_filter_client(products_list , query_params)
+            products_list= filter_by_purchase_link(input_query_model , products_list)
             if not isinstance(products_list , list):
                 return Response ({"message":products_list} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             for i , data in enumerate(products_list):

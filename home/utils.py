@@ -6,6 +6,7 @@ from user_agent import generate_user_agent
 from io import BytesIO
 import threading
 import requests
+from urllib.parse import urlparse
 
 
 
@@ -63,3 +64,25 @@ def get_price_value(price):
 def get_currency_sign(price):
     currency_sign = price[0] if isinstance(price[0] , str) else None
     return currency_sign
+
+def get_domain(link):
+    parsed_link = urlparse(link)
+    if parsed_link.netloc:
+        return parsed_link.netloc
+    else:
+        return None
+
+
+def filter_by_purchase_link(input_model , products):
+    purchase_domain = get_domain(input_model.purchase_link)
+    new_products=[]
+    if input_model.purchase_link and purchase_domain :
+        for product in products:
+            product_website_domain = get_domain(product["website"])
+            if  product_website_domain and purchase_domain ==product_website_domain:
+                new_products.append(product)
+        if len(new_products) >1:
+            input_model.filter_by_purchase_link=True
+            input_model.save()
+            return new_products
+    return products
